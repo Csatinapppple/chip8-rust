@@ -6,13 +6,8 @@ authors = ["Starr Horne <starr@chromahq.com>"]
 [dependencies]
 rand = "0.3.15"
 
-[target.'cfg(target_os = "windows")'.dependencies.sdl2]
-version = "0.35.2"
-default-features = false
-features = ["static-link","use-vcpkg","gfx"]
-
 [target.'cfg(target_os = "linux")'.dependencies.sdl2]
-version = "0.30"
+version = "0.37"
 default-features = false
 features = ["gfx"]
 
