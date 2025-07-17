@@ -39,19 +39,6 @@ impl DisplayDriver {
     }
 
     pub fn draw(&mut self, pixels: &[u64; CHIP8_HEIGHT]) {
-        /*
-        for y in 0usize..CHIP8_HEIGHT {
-        for x in 0usize..CHIP8_WIDTH {
-        let _x = (x as u32) * SCALE_FACTOR;
-        let _y = (y as u32) * SCALE_FACTOR;
-
-        self.canvas.set_draw_color( color( (pixels[y] >> (63 - x) ) & 1 ));
-
-        let _ = self.canvas
-        .fill_rect( Rect::new( _x as i32, _y as i32, SCALE_FACTOR, SCALE_FACTOR ) );
-        }
-        }
-        */
 
         pixels.iter().enumerate().for_each(|(y_index, y)| {
             (0usize..CHIP8_WIDTH).for_each(|x| {
@@ -81,46 +68,3 @@ fn color(value: u64) -> pixels::Color {
     }
 }
 
-// pub fn run() {
-
-//     let mut lastx = 0;
-//     let mut lasty = 0;
-
-//     let mut events = sdl_context.event_pump().unwrap();
-
-//     'main: loop {
-//         for event in events.poll_iter() {
-
-//             match event {
-
-//                 Event::Quit {..} => break 'main,
-
-//                 Event::KeyDown {keycode: Some(keycode), ..} => {
-//                     if keycode == Keycode::Escape {
-//                         break 'main
-//                     } else if keycode == Keycode::Space {
-//                         println!("space down");
-//                         for i in 0..400 {
-//                             driver.canvas.pixel(i as i16, i as i16, 0xFF000FFu32).unwrap();
-//                         }
-//                         driver.canvas.present();
-
-//                     }
-//                 }
-
-//                 Event::MouseButtonDown {x, y, ..} => {
-//                     let color = pixels::Color::RGB(x as u8, y as u8, 255);
-//                     let _ = driver.canvas.line(lastx, lasty, x as i16, y as i16, color);
-//                     let _ = driver.canvas.fill_rect(Rect::new(0,0,100,100));
-
-//                     lastx = x as i16;
-//                     lasty = y as i16;
-//                     println!("mouse btn down at ({},{})", x, y);
-//                     driver.canvas.present();
-//                 }
-
-//                 _ => {}
-//             }
-//         }
-//     }
-// }
