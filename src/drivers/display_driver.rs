@@ -4,8 +4,8 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
-use CHIP8_WIDTH;
 use CHIP8_HEIGHT;
+use CHIP8_WIDTH;
 
 const SCALE_FACTOR: u32 = 20;
 const SCREEN_WIDTH: u32 = (CHIP8_WIDTH as u32) * SCALE_FACTOR;
@@ -39,33 +39,51 @@ impl DisplayDriver {
     }
 
     pub fn draw(&mut self, pixels: &[u64; CHIP8_HEIGHT]) {
-        
+        /*
         for y in 0usize..CHIP8_HEIGHT {
-            for x in 0usize..CHIP8_WIDTH {
-                let _x = (x as u32) * SCALE_FACTOR;
-                let _y = (y as u32) * SCALE_FACTOR;
+        for x in 0usize..CHIP8_WIDTH {
+        let _x = (x as u32) * SCALE_FACTOR;
+        let _y = (y as u32) * SCALE_FACTOR;
 
-                self.canvas.set_draw_color( color( (pixels[y] >> (63 - x) ) & 1 ));
+        self.canvas.set_draw_color( color( (pixels[y] >> (63 - x) ) & 1 ));
 
-                let _ = self.canvas
-                    .fill_rect( Rect::new( _x as i32, _y as i32, SCALE_FACTOR, SCALE_FACTOR ) );
-            }
+        let _ = self.canvas
+        .fill_rect( Rect::new( _x as i32, _y as i32, SCALE_FACTOR, SCALE_FACTOR ) );
         }
+        }
+        */
+
+        pixels.iter()
+            .enumerate()
+            .for_each(|(y_index, y)| {
+            (0usize..CHIP8_WIDTH).for_each(|x| {
+                let _x_start = (x as u32) * SCALE_FACTOR;
+                let _y_start = (y_index as u32) * SCALE_FACTOR;
+
+                self.canvas.set_draw_color(color((*y >> (63 - x)) & 1));
+
+                let _ = self.canvas.fill_rect(Rect::new(
+                    _x_start as i32,
+                    _y_start as i32,
+                    SCALE_FACTOR,
+                    SCALE_FACTOR,
+                ));
+            });
+        });
+
         self.canvas.present();
     }
 }
 
 fn color(value: u64) -> pixels::Color {
     if value == 0 {
-        pixels::Color::RGB(0, 0,100)
+        pixels::Color::RGB(0, 0, 100)
     } else {
         pixels::Color::RGB(0, 150, 0)
     }
 }
 
 // pub fn run() {
-
-
 
 //     let mut lastx = 0;
 //     let mut lasty = 0;

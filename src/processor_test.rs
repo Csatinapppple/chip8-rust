@@ -21,8 +21,6 @@ fn test_initial_state() {
         processor.ram[FONT_SET.len() - 5..FONT_SET.len()],
         [0xF0, 0x80, 0xF0, 0x80, 0x80]
     );
-
-
 }
 #[test]
 fn test_load_data() {
@@ -227,7 +225,7 @@ fn test_op_cxkk() {
     assert_eq!(processor.v[0] & 0xf0, 0);
 }
 
-fn print_vram(vram: &[u64; 32]){
+fn print_vram(vram: &[u64; 32]) {
     for x in 0..32 {
         println!("{:#066b}", vram[x]);
     }
@@ -262,7 +260,6 @@ fn test_op_dxyn() {
     assert_eq!(processor.pc, NEXT_PC);
 }
 
-
 #[test]
 fn test_op_dxyn_wrap_horizontal() {
     let mut processor = build_processor();
@@ -274,13 +271,13 @@ fn test_op_dxyn_wrap_horizontal() {
     processor.v[0] = x as u8;
     processor.v[1] = 0;
     processor.run_opcode(0xd011);
-    
+
     print_vram(&processor.vram);
 
     //assert_eq!(processor.vram[0][x - 1], 0); //64 - 4 - 1 = 59
     assert_eq!((processor.vram[0] >> (x - 1)) & 1, 0);
     //assert_eq!(processor.vram[0][x], 1);
-    assert_eq!((processor.vram[0] >> x) & 1 , 1);
+    assert_eq!((processor.vram[0] >> x) & 1, 1);
     //assert_eq!(processor.vram[0][x + 1], 1);
     assert_eq!((processor.vram[0] >> (x + 1)) & 1, 1);
     //assert_eq!(processor.vram[0][x + 2], 1);
@@ -313,7 +310,7 @@ fn test_op_dxyn_wrap_vertical() {
     processor.v[0] = 0;
     processor.v[1] = y as u8;
     processor.run_opcode(0xd012);
-    
+
     print_vram(&processor.vram);
 
     //assert_eq!(processor.vram[y][0], 1);
@@ -322,7 +319,6 @@ fn test_op_dxyn_wrap_vertical() {
     assert_eq!(processor.vram[0] >> 63 & 1, 1);
     assert_eq!(processor.v[0x0f], 0);
 }
-
 
 // SKP Vx
 #[test]
@@ -333,7 +329,6 @@ fn test_op_ex9e() {
     processor.v[5] = 9;
     processor.run_opcode(0xe59e);
     assert_eq!(processor.pc, SKIPPED_PC);
-
 
     let mut processor = build_processor();
     processor.v[5] = 9;
@@ -349,7 +344,6 @@ fn test_op_exa1() {
     processor.v[5] = 9;
     processor.run_opcode(0xe5a1);
     assert_eq!(processor.pc, NEXT_PC);
-
 
     let mut processor = build_processor();
     processor.v[5] = 9;
@@ -388,7 +382,6 @@ fn test_op_fx0a() {
     assert_eq!(processor.keypad_wait, false);
     assert_eq!(processor.v[5], 0);
     assert_eq!(processor.pc, NEXT_PC);
-
 }
 
 // LD DT, vX
@@ -430,7 +423,6 @@ fn test_op_fx29() {
     processor.run_opcode(0xf529);
     assert_eq!(processor.i, 5 * 9);
     assert_eq!(processor.pc, NEXT_PC);
-
 }
 
 // LD B, Vx
@@ -444,7 +436,6 @@ fn test_op_fx33() {
     assert_eq!(processor.ram[1001], 2);
     assert_eq!(processor.ram[1002], 3);
     assert_eq!(processor.pc, NEXT_PC);
-
 }
 
 // LD [I], Vx
@@ -473,7 +464,6 @@ fn test_op_fx65() {
         assert_eq!(processor.v[i], processor.ram[1000 + i]);
     }
     assert_eq!(processor.pc, NEXT_PC);
-
 }
 
 #[test]
@@ -482,8 +472,8 @@ fn test_timers() {
     processor.delay_timer = 200;
     processor.sound_timer = 100;
     processor.tick(0x0000);
-    processor.delay_timer -=1;
-    processor.sound_timer -=1;
+    processor.delay_timer -= 1;
+    processor.sound_timer -= 1;
     assert_eq!(processor.delay_timer, 199);
     assert_eq!(processor.sound_timer, 99);
 }

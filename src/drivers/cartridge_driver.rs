@@ -8,7 +8,6 @@ pub struct CartridgeDriver {
 
 impl CartridgeDriver {
     pub fn new(filename: &str) -> Self {
-
         let mut f = File::open(filename).expect("file not found");
         let mut buffer = [0u8; 3584];
 
