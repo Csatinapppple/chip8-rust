@@ -53,9 +53,7 @@ impl DisplayDriver {
         }
         */
 
-        pixels.iter()
-            .enumerate()
-            .for_each(|(y_index, y)| {
+        pixels.iter().enumerate().for_each(|(y_index, y)| {
             (0usize..CHIP8_WIDTH).for_each(|x| {
                 let _x_start = (x as u32) * SCALE_FACTOR;
                 let _y_start = (y_index as u32) * SCALE_FACTOR;
