@@ -8,19 +8,20 @@ pub struct InputDriver {
 
 impl InputDriver {
     pub fn new(sdl_context: &sdl2::Sdl) -> Self {
-        InputDriver { events: sdl_context.event_pump().unwrap() }
+        InputDriver {
+            events: sdl_context.event_pump().unwrap(),
+        }
     }
 
-
     pub fn poll(&mut self) -> Result<u16, ()> {
-
         for event in self.events.poll_iter() {
             if let Event::Quit { .. } = event {
                 return Err(());
             };
         }
 
-        let keys: Vec<Keycode> = self.events
+        let keys: Vec<Keycode> = self
+            .events
             .keyboard_state()
             .pressed_scancodes()
             .filter_map(Keycode::from_scancode)
@@ -31,7 +32,7 @@ impl InputDriver {
               fedc ba98 7654 3210
               8421 8421 8421 8421
             0b0000 0000 0000 0000
-            
+
         */
         for key in keys {
             let index = match key {
