@@ -3,7 +3,6 @@ use std::io::prelude::*;
 
 pub struct CartridgeDriver {
     pub rom: [u8; 3584],
-    pub size: usize,
 }
 
 impl CartridgeDriver {
@@ -19,7 +18,6 @@ impl CartridgeDriver {
 
         CartridgeDriver {
             rom: buffer,
-            size: bytes_read,
         }
     }
 }
