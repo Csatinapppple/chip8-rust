@@ -10,10 +10,8 @@ impl CartridgeDriver {
         let mut f = File::open(filename).expect("file not found");
         let mut buffer = [0u8; 3584];
 
-        f.read(&mut buffer).expect("file couldn't be read"); 
+        f.read(&mut buffer).expect("file couldn't be read");
 
-        CartridgeDriver {
-            rom: buffer,
-        }
+        CartridgeDriver { rom: buffer }
     }
 }

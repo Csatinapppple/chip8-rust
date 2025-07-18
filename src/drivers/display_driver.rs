@@ -39,13 +39,13 @@ impl DisplayDriver {
     }
 
     pub fn draw(&mut self, pixels: &[u64; CHIP8_HEIGHT]) {
-
         pixels.iter().enumerate().for_each(|(y_index, y)| {
             (0usize..CHIP8_WIDTH).for_each(|x_index| {
                 let _x_start = (x_index as u32) * SCALE_FACTOR;
                 let _y_start = (y_index as u32) * SCALE_FACTOR;
 
-                self.canvas.set_draw_color(color((*y >> (63 - x_index)) & 1));
+                self.canvas
+                    .set_draw_color(color((*y >> (63 - x_index)) & 1));
 
                 let _ = self.canvas.fill_rect(Rect::new(
                     _x_start as i32,
@@ -67,4 +67,3 @@ fn color(value: u64) -> pixels::Color {
         pixels::Color::RGB(0, 150, 0)
     }
 }
-
