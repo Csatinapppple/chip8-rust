@@ -38,14 +38,17 @@ impl DisplayDriver {
         DisplayDriver { canvas: canvas }
     }
 
+    const COLORS: [pixels::Color; 2] =
+        [pixels::Color::RGB(0, 0, 100), pixels::Color::RGB(0, 150, 0)];
+
     pub fn draw(&mut self, pixels: &[u64; CHIP8_HEIGHT]) {
-        pixels.iter().enumerate().for_each(|(y_index, y)| {
+        pixels.iter().enumerate().for_each(|(y_index, &row)| {
             (0usize..CHIP8_WIDTH).for_each(|x_index| {
                 let _x_start = (x_index as u32) * SCALE_FACTOR;
                 let _y_start = (y_index as u32) * SCALE_FACTOR;
 
                 self.canvas
-                    .set_draw_color(color((*y >> (63 - x_index)) & 1));
+                    .set_draw_color(Self::COLORS[((row >> (63 - x_index)) & 1) as usize]);
 
                 let _ = self.canvas.fill_rect(Rect::new(
                     _x_start as i32,
@@ -57,13 +60,5 @@ impl DisplayDriver {
         });
 
         self.canvas.present();
-    }
-}
-
-fn color(value: u64) -> pixels::Color {
-    if value == 0 {
-        pixels::Color::RGB(0, 0, 100)
-    } else {
-        pixels::Color::RGB(0, 150, 0)
     }
 }

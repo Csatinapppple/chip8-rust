@@ -19,7 +19,6 @@ pub struct OutputState<'a> {
 
 enum ProgramCounter {
     Unknown(u16),
-    //Stay,
     Next,
     Skip,
     Jump(usize),
@@ -54,9 +53,10 @@ pub struct Processor {
 impl Processor {
     pub fn new() -> Self {
         let mut ram = [0u8; CHIP8_RAM];
-        for i in 0..FONT_SET.len() {
-            ram[i] = FONT_SET[i];
-        }
+
+        FONT_SET.iter().enumerate().for_each(|(i, &font)| {
+            ram[i] = font;
+        });
 
         Processor {
             vram: [0; CHIP8_HEIGHT],
@@ -76,18 +76,16 @@ impl Processor {
     }
 
     pub fn load(&mut self, data: &[u8]) {
-        for (i, &byte) in data.iter().enumerate() {
+        data.iter().enumerate().for_each(|(i, &byte)| {
             let addr = 0x200 + i;
-            if addr < 4096 {
-                self.ram[0x200 + i] = byte;
-            } else {
-                break;
+            if addr >= 4096 {
+                panic!("ROM Data is bigger than chip8 RAM");
             }
-        }
+            self.ram[addr] = byte;
+        });
     }
 
     pub fn tick(&mut self, keypad: u16) -> OutputState {
-        //self.vram_changed = false;
         self.keypad = keypad;
 
         if self.keypad_wait {
@@ -170,7 +168,6 @@ impl Processor {
                 println!("ERROR: OPCODE {:#06x} UNKNOWN", opcode);
                 self.pc += OPCODE_SIZE;
             }
-            //ProgramCounter::Stay => (),
             ProgramCounter::Next => self.pc += OPCODE_SIZE,
             ProgramCounter::Skip => self.pc += 2 * OPCODE_SIZE,
             ProgramCounter::Jump(addr) => self.pc = addr,
@@ -356,7 +353,8 @@ impl Processor {
 
     fn op_dxyn(&mut self, x: usize, y: usize, n: usize) -> ProgramCounter {
         self.v[0x0f] = 0;
-        for byte in 0..n {
+
+        (0..n).for_each(|byte| {
             let y = (self.v[y] as usize + byte) % CHIP8_HEIGHT;
             let x = self.v[x] as usize % CHIP8_WIDTH;
 
@@ -371,7 +369,7 @@ impl Processor {
             }
             self.v[0xf] |= if self.vram[y] & mask > 0 { 1 } else { 0 };
             self.vram[y] = self.vram[y] ^ mask;
-        }
+        });
         self.vram_changed = true;
         ProgramCounter::Next
     }
@@ -448,9 +446,7 @@ impl Processor {
     // The interpreter copies the values of registers V0 through Vx
     // into memory, starting at the address in I.
     fn op_fx55(&mut self, x: usize) -> ProgramCounter {
-        for i in 0..x + 1 {
-            self.ram[self.i + i] = self.v[i];
-        }
+        (0..x + 1).for_each(|i| self.ram[self.i + i] = self.v[i]);
         ProgramCounter::Next
     }
 
@@ -458,9 +454,7 @@ impl Processor {
     // The interpreter reads values from memory starting at location
     // I into registers V0 through Vx.
     fn op_fx65(&mut self, x: usize) -> ProgramCounter {
-        for i in 0..x + 1 {
-            self.v[i] = self.ram[self.i + i];
-        }
+        (0..x + 1).for_each(|i| self.v[i] = self.ram[self.i + i]);
         ProgramCounter::Next
     }
 }
